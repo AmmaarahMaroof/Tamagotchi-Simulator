@@ -42,4 +42,13 @@ Note: The GUI version may have display issues on macOS. The CLI version is recom
 - No pip dependencies needed
 - Tkinter included with most Python installations
 
-# Tamagotchi-Simulator
+  
+
+## Tech Stack & DevOps
+- Python 3.11 — no external dependencies
+- Docker — containerised for consistent environments
+- GitHub Actions — CI/CD pipeline runs on every push
+
+## Run with Docker
+docker build -t tamagotchi .
+docker run -it tamagotchi
