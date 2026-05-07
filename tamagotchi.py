@@ -3,6 +3,7 @@ import os
 import random
 import sys
 import time
+from functools import partial
 
 try:
     import tkinter as tk
@@ -193,18 +194,25 @@ def terminal_main() -> None:
 
 
 class TamagotchiGUI:
+    def choose_font(self, candidates):
+        available = set(font.families())
+        for candidate in candidates:
+            if candidate in available:
+                return candidate
+        return candidates[-1]
+
     def __init__(self):
         if tk is None:
             raise RuntimeError("Tkinter is not available. Please use --cli to run in terminal mode.")
 
         self.root = tk.Tk()
         self.root.title("Terminal Tamagotchi")
-        self.root.configure(bg="#B24670")
+        self.root.configure(bg="#111111")
         self.root.geometry("600x550")
         self.root.resizable(False, False)
 
-        self.mono = font.Font(family="Courier", size=11)
-        self.header_font = font.Font(family="Courier", size=14, weight="bold")
+        self.mono = font.Font(family=self.choose_font(["Menlo", "Monaco", "Courier"]), size=11)
+        self.header_font = font.Font(family=self.mono.actual("family"), size=14, weight="bold")
 
         self.root.withdraw()
         name = simpledialog.askstring("Tamagotchi Name", "Name your Tamagotchi:", parent=self.root)
@@ -212,10 +220,10 @@ class TamagotchiGUI:
 
         if name is None:
             name = "Tama"
-            
+
         self.pet = Tamagotchi(name.strip() or "Tama")
 
-        self.main_frame = tk.Frame(self.root, bg="#FAF6F6", padx=12, pady=12)
+        self.main_frame = tk.Frame(self.root, bg="#111111", padx=12, pady=12)
         self.main_frame.pack(fill="both", expand=True)
 
         self.title_label = tk.Label(
@@ -287,6 +295,7 @@ class TamagotchiGUI:
             text="Welcome! Choose an action below.",
             anchor="w",
             justify="left",
+            wraplength=540,
             bg="#050505",
             fg="#a6f7a6",
             font=self.mono,
@@ -294,7 +303,6 @@ class TamagotchiGUI:
             relief="sunken",
             padx=10,
             pady=8,
-            width=60,
             height=3,
         )
         self.message_label.pack(fill="x", pady=(8, 8))
@@ -315,7 +323,7 @@ class TamagotchiGUI:
             button = tk.Button(
                 buttons_frame,
                 text=text,
-                command=lambda choice=code: self.perform_action(choice),
+                command=partial(self.perform_action, code),
                 bg="#000000",
                 fg="#70ff70",
                 activebackground="#022002",
@@ -376,18 +384,30 @@ class TamagotchiGUI:
 
         try:
             import tkinter.ttk as ttk
+            style = ttk.Style()
+            try:
+                style.theme_use("clam")
+            except tk.TclError:
+                pass
+
+            style_name = f"{label_text}.Horizontal.TProgressbar"
+            style.configure(
+                style_name,
+                troughcolor="#333333",
+                background=color,
+                thickness=16,
+            )
+
             bar = ttk.Progressbar(
                 frame,
                 orient="horizontal",
                 length=200,
                 mode="determinate",
                 maximum=100,
+                style=style_name,
             )
             bar.pack(side="right", padx=(5, 0))
-            bar.config(style=f"{color}.Horizontal.TProgressbar")
-            # Custom style for color
-            style = ttk.Style()
-            style.configure(f"{color}.Horizontal.TProgressbar", background=color, troughcolor="#333333")
+            bar['value'] = 0
         except ImportError:
             # Fallback to text bar if ttk not available
             bar = tk.Label(
@@ -429,9 +449,9 @@ class TamagotchiGUI:
             self.disable_buttons()
 
     def update_bar(self, bar, value: int, color: str) -> None:
-        if hasattr(bar, 'config'):  # ttk Progressbar
-            bar['value'] = value
-        else:  # Fallback text bar
+        if hasattr(bar, 'configure') and hasattr(bar, 'cget') and 'value' in bar.config():
+            bar.configure(value=value)
+        else:
             filled = value // 10
             bar.config(text=f"[{'#' * filled}{' ' * (10 - filled)}]", fg=color)
 
