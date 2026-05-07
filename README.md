@@ -1,30 +1,45 @@
 # Terminal Tamagotchi Simulator
 
-A simple Python Tamagotchi game with a graphical UI that looks like a terminal window.
+A Python Tamagotchi game you can play right in your terminal. Hatch, feed, play with, and care for your virtual pet!
 
 ## Run the game
 
-```bash
-python3 tamagotchi.py
-```
-
-The app opens a window with a terminal-style interface and buttons for actions.
-
-If Tkinter is unavailable, run the classic terminal version with:
+**Recommended: CLI version**
 
 ```bash
 python3 tamagotchi.py --cli
 ```
 
+This runs the full-featured terminal version with a cute ASCII character and real-time stat updates.
+
+**Alternative: Graphical UI (experimental)**
+
+```bash
+python3 tamagotchi.py
+```
+
+Note: The GUI version may have display issues on macOS. The CLI version is recommended for the best experience.
+
 ## How to play
 
 - Name your Tamagotchi when prompted.
-- Use the numbered actions to feed, play with, rest, or care for your pet.
+- Use numbered actions (1-5) to feed, play with, rest, or give medicine to your pet.
 - Monitor hunger, happiness, energy, and health.
-- Try to keep your Tamagotchi alive and happy.
+- Watch your cute ASCII character react to your care.
+- Try to keep your Tamagotchi alive and happy!
+
+## Features
+
+- Cute ASCII character that represents your pet
+- Real-time stat tracking (Health, Hunger, Happiness, Energy)
+- Multiple actions with varied outcomes
+- Pet lifecycle system
+- No external dependencies required
 
 ## Notes
 
-- No external dependencies required.
-- Works with Python 3.7+.
+- Works with Python 3.7+
+- No pip dependencies needed
+- Tkinter included with most Python installations
+
 # Tamagotchi-Simulator
