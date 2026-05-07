@@ -22,3 +22,6 @@ jobs:
       - name: Run Tamagotchi smoke test
         run: |
           echo "5" | timeout 5 python3 tamagotchi.py --cli || true
+
+      - name: Build Docker image
+        run: docker build -t tamagotchi .
